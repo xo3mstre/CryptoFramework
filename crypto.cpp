@@ -55,21 +55,32 @@ std::string crypto::remove_spaces(std::string src) {
   return res;
 }
 
-std::string crypto::add_spaces(std::string src, int seria_length) {
-  int additional_nulls = seria_length - src.size() % seria_length;
+std::string crypto::add_spaces(std::string src, std::string seria_length) {
   std::string res;
-  for (int i = 0; i < additional_nulls; i++)
-    res.push_back('0');
 
-  res.append(src);
-  // not done yet
+  for (int i = 0; i < (int)src.size(); i++) {
+    res.push_back(src[i]);
+    if ((i + 1) % std::stoi(seria_length) == 0 && i && i != src.size() - 1)
+      res.push_back(' ');
+  }
+  
   return res;
 }
 
-std::string crypto::base_convert(std::string src, int base_from, int base_to) {
-  std::string tmp_res = to_decimal(src, base_from);
+std::string crypto::base_convert(std::string src, std::string base_from, std::string base_to, std::string prepending_zeroes) {
+  std::string res, seria;
+  std::stringstream series(src);
 
-  std::string res = from_decimal(tmp_res, base_to);
+  while (series >> seria) {
+    std::string tmp_res = to_decimal(seria, std::stoi(base_from));
+    tmp_res = from_decimal(tmp_res, std::stoi(base_to));
+
+    if (prepending_zeroes != "")
+      while (tmp_res.size() % std::stoi(prepending_zeroes))
+        tmp_res = '0' + tmp_res;
+      
+    res.append(tmp_res);
+  }
 
   return res;
 }
@@ -85,7 +96,7 @@ std::string crypto::ascii_encode(std::string src) {
     binary8.push_back(src[i]);
 
     if (binary8.size() == 8) {
-      res.push_back((char)std::stoi(base_convert(binary8, 2, 10)));
+      res.push_back((char)std::stoi(base_convert(binary8, "2", "10")));
       binary8.clear();
     }
   }
@@ -99,7 +110,7 @@ std::string crypto::ascii_decode(std::string src) {
 
   std::string binary8;
   for (int i = 0; i < (int)src.size(); i++) {
-    binary8 = base_convert(std::to_string((int)src[i] + 256), 10, 2);
+    binary8 = base_convert(std::to_string((int)src[i] + 256), "10", "2");
     while (binary8.size() < 8)
       binary8 = '0' + binary8;
 
@@ -124,7 +135,7 @@ std::string crypto::rle_encode(std::string src) {
   res.push_back(src_series[0]);
   std::stringstream series(src_series);
   while (series >> seria) {
-    gamma = base_convert(std::to_string(seria.size()), 10, 2);
+    gamma = base_convert(std::to_string(seria.size()), "10", "2");
     for (int i = 0; i < (int)gamma.size() - 1; i++)
       res.push_back('0');
     res.append(gamma);
@@ -169,7 +180,7 @@ std::string crypto::rle_decode(std::string src) {
   gamma_words >> bit_now;
   int length_now;
   while (gamma_words >> gamma_now) {
-    length_now = std::stoi(base_convert(gamma_now, 2, 10));
+    length_now = std::stoi(base_convert(gamma_now, "2", "10"));
 
     for (int i = 0; i < length_now; i++)
       res.push_back(bit_now);
@@ -259,7 +270,7 @@ std::string crypto::hem_decode(std::string src) {
     error_binary.push_back('0' + tmp_sum % 2);
     std::reverse(error_binary.begin(), error_binary.end());
 
-    int error_position = std::stoi(base_convert(error_binary, 2, 10)) - 1;
+    int error_position = std::stoi(base_convert(error_binary, "2", "10")) - 1;
     if (error_position > -1)
       tmp_src[error_position] = ('0' + '1' - tmp_src[error_position]);
     

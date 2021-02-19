@@ -13,9 +13,9 @@ private:
 
 public:
   static std::string remove_spaces(std::string src);
-  static std::string add_spaces(std::string src, int seria_length);
+  static std::string add_spaces(std::string src, std::string seria_length);
 
-  static std::string base_convert(std::string src, int base_from, int base_to);
+  static std::string base_convert(std::string src, std::string base_from, std::string base_to, std::string prepending_zeroes = "");
 
   static std::string ascii_encode(std::string src);
   static std::string ascii_decode(std::string src);

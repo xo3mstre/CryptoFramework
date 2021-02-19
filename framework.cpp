@@ -55,10 +55,13 @@ void CryptoFramework::run_algorithm() {
     output = crypto::hem_decode(input);
   }
   else if (algorithm == "base-convert") {
-    output = crypto::base_convert(input, std::stoi(get_option("bfrom")), std::stoi(get_option("bto")));
+    output = crypto::base_convert(input, get_option("bfrom"), get_option("bto"), get_option("len"));
   }
   else if (algorithm == "remove-spaces") {
     output = crypto::remove_spaces(input);
+  }
+  else if (algorithm == "add-spaces") {
+    output = crypto::add_spaces(input, get_option("len"));
   }
 
   set(get_option("output"), output);
@@ -138,7 +141,8 @@ int CryptoFramework::process_user() {
         "Some algorithms may require additional options. In this case you need to define these options using USE command.\n"
         "(As example, 'base-convert' algorithm requires two additional options: 'bfrom' and 'bto' - base of the input and base of the output)\n"
         "\n"
-        "As default, algorithms input and output are a bit sequence. There are some exceptions like 'ascii-encode/decode' or 'base64-encode/decode'\n"
+        "As default, algorithms input and output are a bit sequence. There are some exceptions like 'ascii-encode/decode' or 'base64-encode/decode'.\n"
+        "Be careful: SET command ignores spaces. If it is important, you can add them using 'add-spaces' algorithm.\n"
       );
   }
   else if (command == "GET") {
