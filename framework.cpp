@@ -17,15 +17,20 @@ void CryptoFramework::set_option(std::string option_name, std::string option_val
     options["input"] = option_value;
     options["output"] = option_value;
   }
-  else {
+  else if (option_name == "algo")
+    options["algorithm"] = option_value;
+  else 
     options[option_name] = option_value;
-  }
 }
 
 void CryptoFramework::show_options() {
   print_option("algorithm");
   print_option("input");
   print_option("output");
+  print_text("--------------------");
+  for (std::pair<std::string, std::string> opt : options)
+    if (opt.first != "algorithm" && opt.first != "input" && opt.first != "output")
+      print_option(opt.first);
 }
 
 void CryptoFramework::run_algorithm() {
@@ -68,9 +73,15 @@ void CryptoFramework::print_option(std::string option_name) {
     print_option("input");
     print_option("output");
   }
-  else {
-    std::cout << option_name << " => " << options[option_name] << std::endl;
-  }
+  else if (option_name == "algo")
+    print_option("algorithm");
+  else
+    std::cout << option_name << " => " << options[option_name];
+
+  if (option_name == "input" || option_name == "output")
+    std::cout << " => " << get(get_option(option_name));
+
+  std::cout << std::endl;
 }
 
 void CryptoFramework::print_beginning() {
@@ -100,7 +111,37 @@ int CryptoFramework::process_user() {
 
   std::string command;
   user_words >> command;
-  if (command == "GET") {
+  if (command == "HELP" || command == "?") {
+      print_text(
+        "Cryptografic Framework lets you interact with cryptographic algorithms using simple command-line interface.\n"
+        "\n"
+        "Availible commands (case-sensitive):\n"
+        "-------------------------------------------------------------\n"
+        "|  GET <variable>           |  Get value of the variable    |\n"
+        "|  SET <variable> <value>   |  Set value of the variable    |\n"
+        "|  USE <option> <value>     |  Set value of the option      |\n"
+        "|  OPTIONS                  |  List options                 |\n"
+        "|  RUN                      |  Run choosen algorithm        |\n"
+        "|  CLEAR                    |  Clear output (cls)           |\n"
+        "|  EXIT                     |  Exit program                 |\n"
+        "|  HELP / ?                 |  Print this help message      |\n"
+        "-------------------------------------------------------------\n"
+        "\n"
+        "There are two types of stored data: variables and options.\n"
+        "Semantic load is stored in variables. Other data for algorithms is stored in options.\n"
+        "There are three default options required for every algorithm: \n"
+        "-------------------------------------------------------------\n"
+        "|  algorithm                |  Choosen algorithm            |\n"
+        "|  input (default: 'buf')   |  Name of the input variable   |\n"
+        "|  output (default: 'buf')  |  Name of the output variable  |\n"
+        "-------------------------------------------------------------\n"
+        "Some algorithms may require additional options. In this case you need to define these options using USE command.\n"
+        "(As example, 'base-convert' algorithm requires two additional options: 'bfrom' and 'bto' - base of the input and base of the output)\n"
+        "\n"
+        "As default, algorithms input and output are a bit sequence. There are some exceptions like 'ascii-encode/decode' or 'base64-encode/decode'\n"
+      );
+  }
+  else if (command == "GET") {
     std::string variable_name;
     user_words >> variable_name;
     print_variable(variable_name);
@@ -135,6 +176,7 @@ int CryptoFramework::process_user() {
   else if (command == "RUN") {
     run_algorithm();
     print_variable(get_option("output"));
+
     return 0;
   }
   else if (command == "CLEAR") {
