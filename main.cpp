@@ -1,5 +1,3 @@
-#include <iostream>
-#include <windows.h>
 #include "framework.h"
 
 int main() {
