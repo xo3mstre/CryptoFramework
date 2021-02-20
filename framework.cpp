@@ -277,6 +277,8 @@ int CryptoFramework::process_user() {
 
     return 2;
   }
+
+  return 2;
 }
 
 void CryptoFramework::run() {
