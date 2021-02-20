@@ -1,7 +1,7 @@
 #include "framework.h"
 
 void setup_encode() {
-  std::setlocale(LC_CTYPE, "ru_RU.cp1251");
+  setlocale(LC_ALL, "");
 }
 
 std::string CryptoFramework::get(std::string variable_name) {
@@ -26,7 +26,6 @@ void CryptoFramework::set_option(std::string option_name, std::string option_val
   else 
     options[option_name] = option_value;
 }
-
 
 void CryptoFramework::run_algorithm() {
   std::string input = get(get_option("input")), algorithm = get_option("algorithm"), output;
