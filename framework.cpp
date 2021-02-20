@@ -1,8 +1,8 @@
 #include "framework.h"
 
-//void CryptoFramework::save() {
-//  
-//}
+void setup_encode() {
+  std::setlocale(LC_CTYPE, "Russian_Russia.1251");
+}
 
 std::string CryptoFramework::get(std::string variable_name) {
   return variables[variable_name];
@@ -82,12 +82,7 @@ void CryptoFramework::print_option(std::string option_name) {
   else if (option_name == "algo")
     print_option("algorithm");
   else
-    std::cout << option_name << " => " << options[option_name];
-
-  if (option_name == "input" || option_name == "output")
-    std::cout << " => " << get(get_option(option_name));
-
-  std::cout << std::endl;
+    std::cout << option_name << " => " << options[option_name] << std::endl;
 }
 
 void CryptoFramework::print_beginning() {
@@ -152,7 +147,7 @@ int CryptoFramework::process_user() {
         "|  GET <variable>           |  Get value of the variable    |\n"
         "|  SET <variable> <value>   |  Set value of the variable    |\n"
         "|  USE <option> <value>     |  Set value of the option      |\n"
-        "|  SHOW [var|opt]           |  Show stored data             |\n"
+        "|  SHOW [var|opts]          |  Show stored data             |\n"
         "|  RUN [<algorithm>]        |  Run choosen algorithm        |\n"
         "|  CLEAR                    |  Clear output (cls)           |\n"
         "|  EXIT / QUIT              |  Exit program                 |\n"
@@ -241,7 +236,7 @@ int CryptoFramework::process_user() {
 
     if (type == "var")
       show_variables();
-    else if (type == "opt")
+    else if (type == "opts")
       show_options();
     else {
       show_options();
@@ -285,8 +280,7 @@ int CryptoFramework::process_user() {
 }
 
 void CryptoFramework::run() {
-  SetConsoleCP(1251);
-  SetConsoleOutputCP(1251);
+  setup_encode();
 
   while (process_user() != 1) {}
 }
