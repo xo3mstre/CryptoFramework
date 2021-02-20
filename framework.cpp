@@ -1,11 +1,11 @@
 #include "framework.h"
 
 std::string CryptoFramework::get(std::string variable_name) {
-  return user_variables[variable_name];
+  return variables[variable_name];
 }
 
 void CryptoFramework::set(std::string variable_name, std::string variable_value) {
-  user_variables[variable_name] = variable_value;
+  variables[variable_name] = variable_value;
 }
 
 std::string CryptoFramework::get_option(std::string option_name) {
@@ -23,26 +23,11 @@ void CryptoFramework::set_option(std::string option_name, std::string option_val
     options[option_name] = option_value;
 }
 
-void CryptoFramework::show_options() {
-  print_option("algorithm");
-  print_option("input");
-  print_option("output");
-
-  bool is_additional_options_exists = false;
-  for (std::pair<std::string, std::string> opt : options)
-    if (opt.first != "algorithm" && opt.first != "input" && opt.first != "output") {
-      if (!is_additional_options_exists) {
-        is_additional_options_exists = true;
-        print_text("--------------------");
-      }
-
-      print_option(opt.first);
-    }
-}
 
 void CryptoFramework::run_algorithm() {
   std::string input = get(get_option("input")), algorithm = get_option("algorithm"), output;
 
+  print_text("Running algorithm " + algorithm + "...");
   if (algorithm == "ascii-encode") {
     output = crypto::ascii_encode(input);
   }
@@ -76,6 +61,7 @@ void CryptoFramework::run_algorithm() {
   else if (algorithm == "add-spaces") {
     output = crypto::add_spaces(input, get_option("len"));
   }
+  print_text("Done!");
 
   set(get_option("output"), output);
 }
@@ -111,11 +97,33 @@ void CryptoFramework::print_text(std::string text) {
   std::cout << text << std::endl;
 }
 
-void CryptoFramework::run() {
-  SetConsoleCP(1251);
-  SetConsoleOutputCP(1251);
+void CryptoFramework::show_options() {
+  print_text("options: ");
+  print_option("algorithm");
+  print_option("input");
+  print_option("output");
 
-  while (process_user() != 1) {}
+  bool is_additional_options_exists = false;
+  for (std::pair<std::string, std::string> opt : options)
+    if (opt.first != "algorithm" && opt.first != "input" && opt.first != "output") {
+      if (!is_additional_options_exists) {
+        is_additional_options_exists = true;
+        print_text("--------------------");
+      }
+
+      print_option(opt.first);
+    }
+
+  print_text("");
+}
+
+void CryptoFramework::show_variables() {
+  print_text("Variables: ");
+
+  for (std::pair<std::string, std::string> var : variables)
+    print_variable(var.first);
+
+  print_text("");
 }
 
 int CryptoFramework::process_user() {
@@ -136,10 +144,10 @@ int CryptoFramework::process_user() {
         "|  GET <variable>           |  Get value of the variable    |\n"
         "|  SET <variable> <value>   |  Set value of the variable    |\n"
         "|  USE <option> <value>     |  Set value of the option      |\n"
-        "|  OPTIONS                  |  List options                 |\n"
-        "|  RUN                      |  Run choosen algorithm        |\n"
+        "|  SHOW [var|opt]           |  Show stored data             |\n"
+        "|  RUN [<algorithm>]        |  Run choosen algorithm        |\n"
         "|  CLEAR                    |  Clear output (cls)           |\n"
-        "|  EXIT                     |  Exit program                 |\n"
+        "|  EXIT / QUIT              |  Exit program                 |\n"
         "|  HELP / ?                 |  Print this help message      |\n"
         "-------------------------------------------------------------\n"
         "\n"
@@ -185,15 +193,36 @@ int CryptoFramework::process_user() {
 
     return 0;
   }
-  else if (command == "OPTIONS") {
-    show_options();
+  else if (command == "SHOW") {
+    std::string type;
+    user_words >> type;
+
+    if (type == "var")
+      show_variables();
+    else if (type == "opt")
+      show_options();
+    else {
+      show_options();
+      show_variables();
+    }
 
     return 0;
   }
   else if (command == "RUN") {
-    run_algorithm();
-    print_variable(get_option("output"));
+    std::string algorithm_name;
+    user_words >> algorithm_name;
 
+    if (algorithm_name == "") {
+      run_algorithm();
+    }
+    else {
+      std::string saved_algorithm = get_option("algorithm");
+      set_option("algorithm", algorithm_name);
+      run_algorithm();
+      set_option("algorithm", saved_algorithm);
+    }
+
+    print_variable(get_option("output"));
     return 0;
   }
   else if (command == "CLEAR") {
@@ -201,7 +230,7 @@ int CryptoFramework::process_user() {
 
     return 0;
   }
-  else if (command == "EXIT") {
+  else if (command == "EXIT" || command == "QUIT") {
     print_text("Goodbye.");
 
     return 1;
@@ -211,4 +240,11 @@ int CryptoFramework::process_user() {
 
     return 2;
   }
+}
+
+void CryptoFramework::run() {
+  SetConsoleCP(1251);
+  SetConsoleOutputCP(1251);
+
+  while (process_user() != 1) {}
 }
