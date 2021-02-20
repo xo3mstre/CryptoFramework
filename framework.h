@@ -1,6 +1,7 @@
 #pragma once
 #include <iostream>
 #include <sstream>
+#include <fstream>
 #include <string>
 #include <map>
 #include <windows.h>
@@ -10,6 +11,9 @@ class CryptoFramework
 {
   std::map<std::string, std::string> variables = { {"buf", ""} };
   std::map<std::string, std::string> options = { {"algorithm", ""}, {"input", "buf"}, {"output", "buf"} };
+
+  //void save();
+  //void load();
 
   std::string get(std::string variable_name);
   void set(std::string variable_name, std::string variable_value);

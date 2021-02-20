@@ -1,5 +1,9 @@
 #include "framework.h"
 
+//void CryptoFramework::save() {
+//  
+//}
+
 std::string CryptoFramework::get(std::string variable_name) {
   return variables[variable_name];
 }
@@ -136,6 +140,10 @@ int CryptoFramework::process_user() {
   std::string command;
   user_words >> command;
   if (command == "HELP" || command == "?") {
+    std::string type;
+    user_words >> type;
+
+    if (type == "") {
       print_text(
         "Cryptografic Framework lets you interact with cryptographic algorithms using simple command-line interface.\n"
         "\n"
@@ -148,7 +156,7 @@ int CryptoFramework::process_user() {
         "|  RUN [<algorithm>]        |  Run choosen algorithm        |\n"
         "|  CLEAR                    |  Clear output (cls)           |\n"
         "|  EXIT / QUIT              |  Exit program                 |\n"
-        "|  HELP / ?                 |  Print this help message      |\n"
+        "|  HELP / ? [algo|opts]     |  Print help messages          |\n"
         "-------------------------------------------------------------\n"
         "\n"
         "There are two types of stored data: variables and options.\n"
@@ -160,11 +168,45 @@ int CryptoFramework::process_user() {
         "|  output (default: 'buf')  |  Name of the output variable  |\n"
         "-------------------------------------------------------------\n"
         "Some algorithms may require additional options. In this case you need to define these options using USE command.\n"
-        "(As example, 'base-convert' algorithm requires two additional options: 'bfrom' and 'bto' - base of the input and base of the output)\n"
+        "(As example, 'base-convert' algorithm requires three additional options: 'bfrom', 'bto', 'len')\n"
         "\n"
         "As default, algorithms input and output are a bit sequence. There are some exceptions like 'ascii-encode/decode' or 'base64-encode/decode'.\n"
         "Be careful: SET command ignores spaces. If it is important, you can add them using 'add-spaces' algorithm.\n"
       );
+    }
+    else if (type == "algo") {
+      print_text(
+        "There are 6 availible algorithms at the moment.\n"
+        "Section 1: encoding algorithms\n"
+        "  1. ascii-encode / ascii-encode."
+        "     Encode bit sequence to ascii-symbols or decode ascii-symbols to bit sequence. Algorithm uses cp1251.\n"
+        "  2. base64-encode / base64-decode.\n"
+        "     Encode ascii-text to base64+ or decode base64 to ascii-symbols. Algorithm uses cp1251.\n"
+        "     Alphabet for base64: ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/\n"
+        "  3. rle-encode / rle-decode.\n"
+        "     Encode bit sequence to rle-format or decode rle-format to bit sequence.\n"
+        "  4. hem-encode / hem-decode.\n"
+        "     Encode bit sequence to the Hamming code 15/11 or decode Hamming code to bit sequence.\n"
+        "Section 2: service algorithms\n"
+        "  1. base-convert.\n"
+        "     Convert base of the given number.\n"
+        "     Algorithm requires two additional options: \n"
+        "       'bfrom' - base of the input number\n"
+        "       'bto' - base of the output number\n"
+        "     Also you may set 'len' option - multiplicity of output number's length.\n"
+        "  2. add-spaces / remove-spaces.\n"
+        "     Separate input string to blocks of the given length or remove all spaces in the string.\n"
+        "     'add-spaces' algorithm requires one additional option: \n"
+        "       'len' - length of a block.\n"
+      );
+    }
+    else if (type == "opts") {
+      print_text(
+        "Aliases of the options: \n"
+        "  1. io - input and output at one time\n"
+        "  2. algo - algorithm\n"
+      );
+    }
   }
   else if (command == "GET") {
     std::string variable_name;
