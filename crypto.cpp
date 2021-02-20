@@ -120,6 +120,53 @@ std::string crypto::ascii_decode(std::string src) {
   return res;
 }
 
+std::string crypto::base64_encode(std::string src) {
+  std::string src_binary = ascii_decode(src);
+
+  int equal_count = (6 - src_binary.size() % 6) / 2;
+  src_binary.append(std::string(equal_count * 2, '0'));
+
+  const std::string alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/";
+  std::string res, binary6;
+  for (int i = 0; i < src_binary.size(); i++) {
+    binary6.push_back(src_binary[i]);
+    if (binary6.size() == 6) {
+      res.push_back(alphabet[std::stoi(base_convert(binary6, "2", "10"))]);
+      binary6.clear();
+    }
+  }
+
+  res.append(std::string(equal_count, '='));
+  return res;
+}
+
+std::string crypto::base64_decode(std::string src) {
+  std::string src_binary;
+  const std::string alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/";
+  int equal_count = 0;
+  for (int i = 0; i < src.size(); i++) 
+    if (src[i] == '=') {
+      equal_count++;
+      continue;
+    }
+    else 
+      src_binary.append(base_convert(std::to_string(alphabet.find(src[i])), "10", "2", "6"));
+    
+  for (int i = 0; i < equal_count; i++)
+    src_binary.erase(src_binary.end() - 2, src_binary.end());
+
+  std::string res, binary8;
+  for (int i = 0; i < src_binary.size(); i++) {
+    binary8.push_back(src_binary[i]);
+    if (binary8.size() == 8) {
+      res.append(ascii_encode(binary8));
+      binary8.clear();
+    }
+  }
+
+  return res;
+}
+
 std::string crypto::rle_encode(std::string src) {
   std::string src_series;
   char last_symbol = src[0];

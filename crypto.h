@@ -20,6 +20,9 @@ public:
   static std::string ascii_encode(std::string src);
   static std::string ascii_decode(std::string src);
 
+  static std::string base64_encode(std::string src);
+  static std::string base64_decode(std::string src);
+
   static std::string rle_encode(std::string src);
   static std::string rle_decode(std::string src);
 

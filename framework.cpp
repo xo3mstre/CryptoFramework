@@ -27,10 +27,17 @@ void CryptoFramework::show_options() {
   print_option("algorithm");
   print_option("input");
   print_option("output");
-  print_text("--------------------");
+
+  bool is_additional_options_exists = false;
   for (std::pair<std::string, std::string> opt : options)
-    if (opt.first != "algorithm" && opt.first != "input" && opt.first != "output")
+    if (opt.first != "algorithm" && opt.first != "input" && opt.first != "output") {
+      if (!is_additional_options_exists) {
+        is_additional_options_exists = true;
+        print_text("--------------------");
+      }
+
       print_option(opt.first);
+    }
 }
 
 void CryptoFramework::run_algorithm() {
@@ -41,6 +48,12 @@ void CryptoFramework::run_algorithm() {
   }
   else if (algorithm == "ascii-decode") {
     output = crypto::ascii_decode(input);
+  }
+  else if (algorithm == "base64-encode") {
+    output = crypto::base64_encode(input);
+  }
+  else if (algorithm == "base64-decode") {
+    output = crypto::base64_decode(input);
   }
   else if (algorithm == "rle-encode") {
     output = crypto::rle_encode(input);
