@@ -1,7 +1,7 @@
 #include "framework.h"
 
 void setup_encode() {
-  std::setlocale(LC_CTYPE, "Russian_Russia.1251");
+  std::setlocale(LC_CTYPE, "ru_RU.cp1251");
 }
 
 std::string CryptoFramework::get(std::string variable_name) {
