@@ -123,7 +123,7 @@ std::string crypto::ascii_decode(std::string src) {
 std::string crypto::base64_encode(std::string src) {
   std::string src_binary = ascii_decode(src);
 
-  int equal_count = (6 - src_binary.size() % 6) / 2;
+  int equal_count = ((6 - src_binary.size() % 6) % 6) / 2;
   src_binary.append(std::string(equal_count * 2, '0'));
 
   const std::string alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/";
