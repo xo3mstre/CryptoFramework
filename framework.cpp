@@ -61,6 +61,9 @@ void CryptoFramework::run_algorithm() {
   else if (algorithm == "base-convert") {
     output = crypto::base_convert(input, get_option("bfrom"), get_option("bto"), get_option("len"));
   }
+  else if (algorithm == "string-replace") {
+    output = crypto::string_replace(input, get_option("sfrom"), get_option("sto"));
+  }
   else if (algorithm == "remove-spaces") {
     output = crypto::remove_spaces(input);
   }
@@ -173,12 +176,12 @@ int CryptoFramework::process_user() {
     }
     else if (type == "algo") {
       print_text(
-        "There are 6 availible algorithms at the moment.\n"
+        "There are 7 availible algorithms at the moment.\n"
         "Section 1: encoding algorithms\n"
         "  1. ascii-encode / ascii-encode."
-        "     Encode bit sequence to ascii-symbols or decode ascii-symbols to bit sequence. Algorithm uses cp1251.\n"
+        "     Encode bit sequence to ascii-symbols or decode ascii symbols to bit sequence. Algorithm uses cp1251.\n"
         "  2. base64-encode / base64-decode.\n"
-        "     Encode ascii-text to base64+ or decode base64 to ascii-symbols. Algorithm uses cp1251.\n"
+        "     Encode ascii-text to base64 or decode base64 to ascii symbols. Algorithm uses cp1251 encode.\n"
         "     Alphabet for base64: ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/\n"
         "  3. rle-encode / rle-decode.\n"
         "     Encode bit sequence to rle-format or decode rle-format to bit sequence.\n"
@@ -194,13 +197,18 @@ int CryptoFramework::process_user() {
         "  2. add-spaces / remove-spaces.\n"
         "     Separate input string to blocks of the given length or remove all spaces in the string.\n"
         "     'add-spaces' algorithm requires one additional option: \n"
-        "       'len' - length of a block.\n"
+        "       'len' - length of a block\n"
+        "  3. string-replace.\n"
+        "     Once replace all occurences of the given string in the input with another given string.\n"
+        "     Algorithm requires two additional options: \n"
+        "       'sfrom' - string to replaced\n"
+        "       'sto' - string to replace with\n"
       );
     }
     else if (type == "opts") {
       print_text(
         "Aliases of the options: \n"
-        "  1. io - input and output at one time\n"
+        "  1. io - input and output\n"
         "  2. algo - algorithm\n"
       );
     }

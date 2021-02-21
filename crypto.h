@@ -17,6 +17,8 @@ public:
 
   static std::string base_convert(std::string src, std::string base_from, std::string base_to, std::string prepending_zeroes = "");
 
+  static std::string string_replace(std::string src, std::string string_from, std::string string_to);
+
   static std::string ascii_encode(std::string src);
   static std::string ascii_decode(std::string src);
 

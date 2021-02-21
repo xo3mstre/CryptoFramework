@@ -85,6 +85,20 @@ std::string crypto::base_convert(std::string src, std::string base_from, std::st
   return res;
 }
 
+std::string crypto::string_replace(std::string src, std::string string_from, std::string string_to) {
+  int first_occurence = 0, first_position_to_search = 0;
+  do {
+    first_occurence = src.find(string_from, first_position_to_search);
+    if (first_occurence != -1) {
+      src.erase(src.begin() + first_occurence, src.begin() + first_occurence + string_from.size());
+      src.insert(first_occurence, string_to);
+      first_position_to_search = first_occurence + string_to.size();
+    }
+  } while (first_occurence != -1);
+
+  return src;
+}
+
 std::string crypto::ascii_encode(std::string src) {
   std::string res;
 
