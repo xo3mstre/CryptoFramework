@@ -110,7 +110,7 @@ std::string crypto::ascii_decode(std::string src) {
 
   std::string binary8;
   for (int i = 0; i < (int)src.size(); i++) {
-    binary8 = base_convert(std::to_string((int)src[i] + 256), "10", "2");
+    binary8 = base_convert(std::to_string(((int)src[i] + 256) % 256), "10", "2");
     while (binary8.size() < 8)
       binary8 = '0' + binary8;
 
