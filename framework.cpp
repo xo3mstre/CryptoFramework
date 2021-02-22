@@ -1,10 +1,10 @@
 #include "framework.h"
-#include <windows.h>
+//#include <windows.h>
 
 void setup_encode() {
-  //setlocale(LC_ALL, ".1251");
-  SetConsoleCP(1251);
-  SetConsoleOutputCP(1251);
+  setlocale(LC_ALL, "ru_RU.1251");
+  //SetConsoleCP(1251);
+  //SetConsoleOutputCP(1251);
 }
 
 std::string CryptoFramework::get(std::string variable_name) {
