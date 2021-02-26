@@ -5,8 +5,14 @@
 #include <string>
 #include <map>
 #include <clocale>
-//#include <windows.h>
 #include "crypto.h"
+
+#ifndef _WIN32  
+#include <clocale>
+#else 
+#include <windows.h>
+#endif 
+
 
 class CryptoFramework
 {
