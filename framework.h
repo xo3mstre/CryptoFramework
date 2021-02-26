@@ -5,6 +5,7 @@
 #include <string>
 #include <map>
 #include <clocale>
+//#include <windows.h>
 #include "crypto.h"
 
 class CryptoFramework

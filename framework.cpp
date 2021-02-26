@@ -1,8 +1,7 @@
 #include "framework.h"
-//#include <windows.h>
 
 void setup_encode() {
-  setlocale(LC_ALL, ".1251");
+  setlocale(LC_ALL, "ru_RU.cp1251");
   //SetConsoleCP(1251);
   //SetConsoleOutputCP(1251);
 }
